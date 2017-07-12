@@ -47,20 +47,46 @@
         return newArr;
     };
   
-    library.skipe = function(arr, n) {
+    library.skip = function(arr, n) {
         arr.splice(n,1);
         return arr;
     };
   
     library.chain = function(arr) {
         arr.take = this.take.bind(null, arr);
-        arr.skipe = this.skipe.bind(null, arr);
+        arr.skip = this.skip.bind(null, arr);
         arr.map = this.map.bind(null, arr);
         arr.reduce = this.reduce.bind(null, arr);
         arr.filter = this.filter.bind(null, arr);
         arr.forEach = this.forEach.bind(null, arr);
+        arr.value = function() {
+        if(this.take == undefined){
+          return;
+        }
+        delete this.take;
+        delete this.skip;
+        delete this.map;
+        delete this.reduce;
+        delete this.filter;
+        delete this.forEach;
+        delete this.value;
+        return this;
+    }
+        
         return arr;
     }
-  
+    library.value = function() {
+        if(this.take == undefined){
+          return;
+        }
+        delete this.take;
+        delete this.skip;
+        delete this.map;
+        delete this.reduce;
+        delete this.filter;
+        delete this.forEach;
+        return this;
+    }
+    
     window.lib = library;
 }());
