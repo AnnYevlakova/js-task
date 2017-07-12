@@ -1,57 +1,37 @@
 ;(function() {
     let library = {};
-    library.filter = function(arr,callback) {
-        if({}.toString.call(arr) != '[object Array]') {
-            throw new Error(`${arr} is not an array`);
-        }
-        if(typeof callback != 'function') {
-            throw new TypeError(`${callback} is not a function`);
-        }
-        return arr.filter(callback);
-    };
     library.forEach = function(arr,callback) {
-        if({}.toString.call(arr) != '[object Array]') {
-            throw new Error(`${arr} is not an array`);
+        for (let i= 0; i <arr.length; i++) {
+            callback(arr[i], i, arr);
         }
-        if(typeof callback != 'function') {
-            throw new TypeError(`${callback} is not a function`);
+    };
+    library.filter = function(arr,callback) {
+        let newArr = [];
+        for (let i= 0; i <arr.length; i++) {
+            if(callback(arr[i], i, arr)) {
+              newArr.push(arr[i]);
+            }
         }
-        arr.forEach(callback);
+        return newArr;
     };
     library.reduce = function(arr, callback) {
-        if({}.toString.call(arr) != '[object Array]') {
-            throw new Error(`${arr} is not an array`);
-        }
-        if(typeof callback != 'function') {
-            throw new TypeError(`${callback} is not a function`);
-        }
-        return arr.reduce(callback);
+        let result = arr[0];
+        for (let i= 1; i <arr.length; i++) {
+            result = callback(result, arr[i], i, arr); 
+        }     
+        return result;
     };
     library.map = function(arr, callback) {
-        if({}.toString.call(arr) != '[object Array]') {
-            throw new Error(`${arr} is not an array`);
+      let newArr = [];
+        for (let i= 0; i <arr.length; i++) {
+            newArr.push(callback(arr[i], i, arr));
         }
-        if(typeof callback != 'function') {
-            throw new TypeError(`${callback} is not a function`);
-        }
-        return arr.map(callback);
+      return newArr;
     };
     library.take = function(arr, n) {
-        if({}.toString.call(arr) != '[object Array]') {
-            throw new Error(`${arr} is not an array`);
-        }
-        if(typeof n != 'number') {
-            throw new TypeError(`${n} is not a number`);
-        }
         return arr[n];
     };
     library.skipe = function(arr, n) {
-        if({}.toString.call(arr) != '[object Array]') {
-            throw new Error(`${arr} is not an array`);
-        }
-        if(typeof n != 'number') {
-            throw new TypeError(`${n} is not a number`);
-        }
         arr.splice(n,1);
         return arr;
     };
