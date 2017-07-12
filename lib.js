@@ -2,20 +2,12 @@
     const library = {};
   
     library.forEach = function(arr,callback) {
-        if(callback == undefined) {
-            callback = arr;
-            arr = this;
-        }
         for (let i = 0; i < arr.length; i++) {
             callback(arr[i], i, arr);
         }
     };
   
     library.filter = function(arr,callback) {
-        if(callback == undefined) {
-            callback = arr;
-            arr = this;
-        }
         let newArr = [];
         for (let i = 0; i < arr.length; i++) {
             if(callback(arr[i], i, arr)) {
@@ -29,10 +21,6 @@
     };
   
     library.reduce = function(arr, callback) {
-        if(callback == undefined) {
-            callback = arr;
-            arr = this;
-        }
         let result = arr[0];
         for (let i = 1; i < arr.length; i++) {
             result = callback(result, arr[i], i, arr); 
@@ -41,10 +29,6 @@
     };
   
     library.map = function(arr, callback) {
-        if(callback == undefined) {
-            callback = arr;
-            arr = this;
-        }
         let newArr = [];
         for (let i = 0; i < arr.length; i++) {
             newArr.push(callback(arr[i], i, arr));
@@ -56,10 +40,6 @@
     };
   
     library.take = function(arr, n) {
-        if(n == undefined) {
-            n = arr;
-            arr = this;
-        }
         let newArr = arr.slice(0,n);
         if(arr.take != undefined) {
             library.chain(newArr);
@@ -68,22 +48,18 @@
     };
   
     library.skipe = function(arr, n) {
-        if(n == undefined) {
-            n = arr;
-            arr = this;
-        }
         arr.splice(n,1);
         return arr;
     };
   
-    library.chain = function(a) {
-        a.take = this.take;
-        a.skipe = this.skipe;
-        a.map = this.map;
-        a.reduce = this.reduce;
-        a.filter = this.filter;
-        a.forEach = this.forEach;
-        return a;
+    library.chain = function(arr) {
+        arr.take = this.take.bind(null, arr);
+        arr.skipe = this.skipe.bind(null, arr);
+        arr.map = this.map.bind(null, arr);
+        arr.reduce = this.reduce.bind(null, arr);
+        arr.filter = this.filter.bind(null, arr);
+        arr.forEach = this.forEach.bind(null, arr);
+        return arr;
     }
   
     window.lib = library;

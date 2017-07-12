@@ -13,4 +13,4 @@ console.log(lib.map([2,4,5,1], (a)=>{
 }));
 console.log(lib.take([2,4,5,1],2));
 console.log(lib.skipe([2,4,5,1],3));
-console.log(lib.chain([2,4,5,1]).take(2).skipe(1));
+console.log(lib.chain([2,4,5,1]).take(3).skipe(1));
