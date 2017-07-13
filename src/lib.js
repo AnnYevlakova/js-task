@@ -19,7 +19,7 @@ library.filter = function(arr, callback) {
 };
 
 library.reduce = function(arr, callback) {
-    const result = arr[0];
+    let result = arr[0];
     
     for (let i = 1; i < arr.length; i++) {
         result = callback(result, arr[i], i, arr); 
@@ -52,6 +52,7 @@ library.skip = function(arr, n) {
 
 library.addSum = function(arr, start, end) {
     let result = arr[start];
+    
     for(let i = start+1; i < end; i++){
         result += arr[i];
     }
@@ -60,8 +61,22 @@ library.addSum = function(arr, start, end) {
     return arr;
 };
 
+const cache = {};
+
+library.average= function(arr) {
+    if(cache.hasOwnProperty(JSON.stringify(arr))) {
+        return cache[JSON.stringify(arr)];
+    }
+    const average = library.reduce(arr, (prev, next) => prev + next) / arr.length;
+    
+    cache[JSON.stringify(arr)] = average;
+    
+    return average;
+};
+
 library.chain = function(arr) {
     function wrapChain(method) {
+        
         return function(...n){
             newLib._value = method.apply(library, [newLib._value, ...n]);
             
@@ -77,6 +92,7 @@ library.chain = function(arr) {
         reduce: wrapChain(library.reduce),
         filter: wrapChain(library.filter),
         addSum: wrapChain(library.addSum),
+        average: wrapChain(library.average),
         forEach: function(n){
             library.forEach.apply(library, [this._value, n]);
             
