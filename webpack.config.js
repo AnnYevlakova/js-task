@@ -1,13 +1,13 @@
-var path = require('path');
+const path = require('path');
 
 module.exports = {
-    entry: './test.js',
+    entry: './src/test.js',
     output: {
         path: path.join(__dirname, './'),
         filename: 'bundle.js'
     },
     resolve: {
-        extensions: ['.js', '.json',]
+        extensions: ['.js', '.json']
     }
 };
 module: {
