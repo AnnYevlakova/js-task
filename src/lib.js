@@ -51,33 +51,21 @@ library.skip = function(arr, n) {
 };
 
 library.chain = function(arr) {
+    function wrapChain(method) {
+        return function(n){
+            newLib._value = method.apply(library, [newLib._value, n]);
+            
+            return newLib;
+        }
+    }
+    
     const newLib = {
         _value: arr,
-        take: function(n){
-            this._value = library.take.apply(library, [this._value, n]);
-            
-            return this;
-        },
-        skip: function(n){
-            this._value = library.skip.apply(library, [this._value, n]);
-            
-            return this;
-        },
-        map: function(n){
-            this._value = library.map.apply(library, [this._value, n]);
-            
-            return this;
-        },
-        reduce: function(n){
-            this._value = library.reduce.apply(library, [this._value, n]);
-            
-            return this;
-        },
-        filter: function(n){
-            this._value = library.filter.apply(library, [this._value, n]);
-            
-            return this;
-        },
+        take: wrapChain(library.take),
+        skip: wrapChain(library.skip),
+        map: wrapChain(library.map),
+        reduce: wrapChain(library.reduce),
+        filter: wrapChain(library.filter),
         forEach: function(n){
             library.forEach.apply(library, [this._value, n]);
             
