@@ -50,10 +50,20 @@ library.skip = function(arr, n) {
     return arr;
 };
 
+library.addSum = function(arr, start, end) {
+    let result = arr[start];
+    for(let i = start+1; i < end; i++){
+        result += arr[i];
+    }
+    arr.push(result);
+    
+    return arr;
+};
+
 library.chain = function(arr) {
     function wrapChain(method) {
-        return function(n){
-            newLib._value = method.apply(library, [newLib._value, n]);
+        return function(...n){
+            newLib._value = method.apply(library, [newLib._value, ...n]);
             
             return newLib;
         }
@@ -66,6 +76,7 @@ library.chain = function(arr) {
         map: wrapChain(library.map),
         reduce: wrapChain(library.reduce),
         filter: wrapChain(library.filter),
+        addSum: wrapChain(library.addSum),
         forEach: function(n){
             library.forEach.apply(library, [this._value, n]);
             
