@@ -59,33 +59,21 @@
         arr.reduce = this.reduce.bind(null, arr);
         arr.filter = this.filter.bind(null, arr);
         arr.forEach = this.forEach.bind(null, arr);
-        arr.value = function() {
-        if(this.take == undefined){
-          return;
-        }
-        delete this.take;
-        delete this.skip;
-        delete this.map;
-        delete this.reduce;
-        delete this.filter;
-        delete this.forEach;
-        delete this.value;
-        return this;
-    }
         
-        return arr;
-    }
-    library.value = function() {
-        if(this.take == undefined){
-          return;
+        arr.value = function() {
+            if(this.take == undefined){
+                return;
+            }
+            delete this.take;
+            delete this.skip;
+            delete this.map;
+            delete this.reduce;
+            delete this.filter;
+            delete this.forEach;
+            delete this.value;
+            return this;
         }
-        delete this.take;
-        delete this.skip;
-        delete this.map;
-        delete this.reduce;
-        delete this.filter;
-        delete this.forEach;
-        return this;
+        return arr;
     }
     
     window.lib = library;
