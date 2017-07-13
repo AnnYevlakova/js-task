@@ -61,17 +61,18 @@ library.addSum = function(arr, start, end) {
     return arr;
 };
 
-const cache = {};
-
-library.average= function(arr) {
-    if(cache.hasOwnProperty(JSON.stringify(arr))) {
-        return cache[JSON.stringify(arr)];
-    }
-    const average = library.reduce(arr, (prev, next) => prev + next) / arr.length;
+library.average = function(arr) {
+    const cache = {};
     
-    cache[JSON.stringify(arr)] = average;
-    
-    return average;
+    return (function() {
+        const index = JSON.stringify(arr);
+        
+        if(index in cache) {
+            return cache[index];
+        }
+        
+        return (cache[index] = library.reduce(arr, (prev, next) => prev + next) / arr.length);
+    })();    
 };
 
 library.chain = function(arr) {
