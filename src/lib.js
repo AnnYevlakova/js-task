@@ -1,26 +1,24 @@
 export const library = {};
-let memorise = setMemo();
 
-function setMemo() {
+library.memorise = function(method) {
     const cache = {};
     
-    return function(name, args, result) {
-        const index = JSON.stringify(args);
+    return function(...args) {
+        const index = JSON.stringify(args[0]);
+        const methodName = method.toString().match(/function (\w+)\(/)[1];
         
-        if (result == undefined){
-            if(cache[name] != undefined && index in cache[name]) {
-                return cache[name][index];
-            }
+        if (cache[methodName] != undefined && index in cache[methodName]) {
+            return cache[methodName][index];
         } else {
-            if (cache[name] == undefined) {
-                cache[name] = {};
-            } 
-            cache[name][index] = result;
+            const result = method.call(null, ...args);
             
-            return;
+            if (cache[methodName] == undefined) {
+                cache[methodName] = {};
+            } 
+            cache[methodName][index] = result;
+            
+            return result;
         }
-        
-        return false;
     };
 }
 
@@ -74,36 +72,23 @@ library.skip = function(arr, n) {
     return arr;
 };
 
-library.addSum = function(arr, start, end) {
-    const memo = memorise('addSum', arguments);
+library.addSum = library.memorise(function addSum (arr, start, end) {
     let result = arr[start];
-    const newArr = [...arr];
-    
-    if(memo) {
-        return memo;
-    } 
+     
     for(let i = start+1; i < end; i++){
-        result += newArr[i];
+        result += arr[i];
     }
-    newArr.push(result);
-    memorise('addSum', arguments, newArr);
+    arr.push(result);
     
-    return newArr;
-};
+    return arr;
+});
 
-library.average = function(arr) {
-    const memo = memorise('average', arguments);
-        
-    if(memo) {
-        return memo;
-    }
+library.average = library.memorise(function average (arr) {
     const result = library.reduce(arr, (prev, next) => prev + next) / arr.length;
-    
-    memorise('average', arguments, result);
-    
+        
     return result;
         
-};
+});
 
 library.chain = function(arr) {
     function wrapChain(method) {
