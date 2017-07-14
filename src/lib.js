@@ -1,6 +1,6 @@
 export const library = {};
 
-library.memorise = function(method) {
+const memoize = function(method) {
     const cache = {};
     
     return function(...args) {
@@ -10,7 +10,7 @@ library.memorise = function(method) {
         if (cache[methodName] != undefined && index in cache[methodName]) {
             return cache[methodName][index];
         } else {
-            const result = method.call(null, ...args);
+            const result = method.apply(null, args);
             
             if (cache[methodName] == undefined) {
                 cache[methodName] = {};
@@ -72,7 +72,7 @@ library.skip = function(arr, n) {
     return arr;
 };
 
-library.addSum = library.memorise(function addSum (arr, start, end) {
+library.addSum = memoize(function addSum (arr, start, end) {
     let result = arr[start];
      
     for(let i = start+1; i < end; i++){
@@ -83,7 +83,7 @@ library.addSum = library.memorise(function addSum (arr, start, end) {
     return arr;
 });
 
-library.average = library.memorise(function average (arr) {
+library.average = memoize(function average (arr) {
     const result = library.reduce(arr, (prev, next) => prev + next) / arr.length;
         
     return result;
@@ -120,4 +120,4 @@ library.chain = function(arr) {
     }
     
     return newLib;
-    };
+};
