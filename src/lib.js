@@ -1,4 +1,28 @@
 export const library = {};
+let memorise = setMemo();
+
+function setMemo() {
+    const cache = {};
+    
+    return function(name, args, result) {
+        const index = JSON.stringify(args);
+        
+        if (result == undefined){
+            if(cache[name] != undefined && index in cache[name]) {
+                return cache[name][index];
+            }
+        } else {
+            if (cache[name] == undefined) {
+                cache[name] = {};
+            } 
+            cache[name][index] = result;
+            
+            return;
+        }
+        
+        return false;
+    };
+}
 
 library.forEach = function(arr, callback) {
     for (let i = 0; i < arr.length; i++) {
@@ -8,7 +32,7 @@ library.forEach = function(arr, callback) {
 
 library.filter = function(arr, callback) {
     const newArr = [];
-
+    
     for (let i = 0; i < arr.length; i++) {
         if(callback(arr[i], i, arr)) {
             newArr.push(arr[i]);
@@ -51,28 +75,34 @@ library.skip = function(arr, n) {
 };
 
 library.addSum = function(arr, start, end) {
+    const memo = memorise('addSum', arguments);
     let result = arr[start];
+    const newArr = [...arr];
     
+    if(memo) {
+        return memo;
+    } 
     for(let i = start+1; i < end; i++){
-        result += arr[i];
+        result += newArr[i];
     }
-    arr.push(result);
+    newArr.push(result);
+    memorise('addSum', arguments, newArr);
     
-    return arr;
+    return newArr;
 };
 
 library.average = function(arr) {
-    const cache = {};
+    const memo = memorise('average', arguments);
+        
+    if(memo) {
+        return memo;
+    }
+    const result = library.reduce(arr, (prev, next) => prev + next) / arr.length;
     
-    return (function() {
-        const index = JSON.stringify(arr);
+    memorise('average', arguments, result);
+    
+    return result;
         
-        if(index in cache) {
-            return cache[index];
-        }
-        
-        return (cache[index] = library.reduce(arr, (prev, next) => prev + next) / arr.length);
-    })();    
 };
 
 library.chain = function(arr) {
