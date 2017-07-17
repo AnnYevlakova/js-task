@@ -1,5 +1,6 @@
-import {library} from './lib';
+import {library as lib} from './lib';
 
-console.log(library.chain([1,2,3,7,6]).addSum(0,3).value());
-console.log(library.addSum([1,2,3,7,6],0,3));
+console.log(lib.average([2,4]));
+console.log(lib.average([2,4]));
+console.log(lib.average([2,4]));
 

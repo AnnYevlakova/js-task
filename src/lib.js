@@ -1,6 +1,6 @@
 export const library = {};
 
-const memoize = function(method) {
+const addMemo = function(method) {
     const cache = {};
     
     return function(...args) {
@@ -10,7 +10,7 @@ const memoize = function(method) {
         if (cache[methodName] != undefined && index in cache[methodName]) {
             return cache[methodName][index];
         } else {
-            const result = method.apply(null, args);
+            const result = library.memoize(method,args);
             
             if (cache[methodName] == undefined) {
                 cache[methodName] = {};
@@ -20,6 +20,10 @@ const memoize = function(method) {
             return result;
         }
     };
+}
+
+library.memoize = function(method, args){
+     return method.apply(null, args);
 }
 
 library.forEach = function(arr, callback) {
@@ -72,7 +76,7 @@ library.skip = function(arr, n) {
     return arr;
 };
 
-library.addSum = memoize(function addSum (arr, start, end) {
+library.addSum = addMemo (function addSum (arr, start, end) {
     let result = arr[start];
      
     for(let i = start+1; i < end; i++){
@@ -83,12 +87,19 @@ library.addSum = memoize(function addSum (arr, start, end) {
     return arr;
 });
 
-library.average = memoize(function average (arr) {
+library.average = addMemo(function average (arr) {
     const result = library.reduce(arr, (prev, next) => prev + next) / arr.length;
         
     return result;
         
 });
+
+function average (arr) {
+    const result = library.reduce(arr, (prev, next) => prev + next) / arr.length;
+        
+    return result;
+        
+}
 
 library.chain = function(arr) {
     function wrapChain(method) {
