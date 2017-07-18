@@ -96,7 +96,6 @@ function average (arr) {
 	const result = library.reduce(arr, (prev, next) => prev + next) / arr.length;
         
 	return result;
-        
 }
 
 library.chain = function(arr) {
